@@ -19,12 +19,13 @@ services:
     volumes:
       - mysql-data:/var/lib/mysql
     healthcheck:
-      test: ["CMD", "mysqladmin", "ping", "-uroot", "-ppw"]
+      test: ["CMD", "mysqladmin", "ping", "-h127.0.0.1", "-uroot", "-ppw"]
       interval: 5s
       timeout: 5s
       retries: 20
 
   blue:
+    restart: on-failure
     networks: [a1-net]
     build: .
     image: miteshcodes/clo835-webapp:v1
@@ -41,6 +42,7 @@ services:
         condition: service_healthy
 
   pink:
+    restart: on-failure
     networks: [a1-net]
     image: miteshcodes/clo835-webapp:v1
     ports: ["8082:8080"]
@@ -52,6 +54,7 @@ services:
         condition: service_healthy
 
   lime:
+    restart: on-failure
     networks: [a1-net]
     image: miteshcodes/clo835-webapp:v1
     ports: ["8083:8080"]
