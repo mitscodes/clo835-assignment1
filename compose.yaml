@@ -9,10 +9,11 @@
 
 services:
   mysql-db:
+    networks: [a1-net]
     build:
       context: .
       dockerfile: Dockerfile_mysql
-    image: my_db
+    image: miteshcodes/clo835-mysql:v1
     environment:
       MYSQL_ROOT_PASSWORD: pw
     volumes:
@@ -24,8 +25,9 @@ services:
       retries: 20
 
   blue:
+    networks: [a1-net]
     build: .
-    image: my_app
+    image: miteshcodes/clo835-webapp:v1
     ports: ["8081:8080"]
     environment: &app_env
       DBHOST: mysql-db
@@ -39,7 +41,8 @@ services:
         condition: service_healthy
 
   pink:
-    image: my_app
+    networks: [a1-net]
+    image: miteshcodes/clo835-webapp:v1
     ports: ["8082:8080"]
     environment:
       <<: *app_env
@@ -49,7 +52,8 @@ services:
         condition: service_healthy
 
   lime:
-    image: my_app
+    networks: [a1-net]
+    image: miteshcodes/clo835-webapp:v1
     ports: ["8083:8080"]
     environment:
       <<: *app_env
@@ -60,3 +64,7 @@ services:
 
 volumes:
   mysql-data:
+
+networks:
+  a1-net:
+    driver: bridge
